@@ -1,0 +1,136 @@
+body {
+  background: rgb(3,45,71);
+  background: radial-gradient(circle, rgba(3,45,71,1) 0%, rgba(5,36,56,1) 33%, rgba(2,18,28,1) 100%);
+}
+
+#jump {
+  background-color: #2476f1;
+  color: rgb(255, 255, 255);
+  border-radius: 700px;
+  width: 50%;
+  height: 100;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: bangers;
+  font-size: 70;
+  -webkit-text-stroke: 2.5px rgb(0, 0, 0);
+}
+#jump:hover {
+  background-color: #013e99;
+}
+#canvas_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  position: relative;
+}
+canvas {
+  width: 60%;
+  height: 75%;
+  background-color: #1a374d;
+}
+
+.test {
+  position: absolute;
+  height: 100%;
+  width: 19.5%;
+  left: 0;
+  background-color: #315169be;
+  display: flex;
+  flex-direction: column; /* Set the direction to vertical */
+  align-items: center; /* Align items to the center horizontally */
+}
+
+.banger {
+  text-align: center;
+  font-family: bangers;
+  font-size: 50;
+  line-height: 0.3;
+  -webkit-text-stroke: 0.7px rgb(255, 255, 255);
+}
+#jumperGame {
+  margin-top: 45;
+}
+
+.menu {
+  background-color: #2476f1;
+  font-family: bangers;
+  font-size: medium;
+  -webkit-text-stroke: 0.9px rgb(0, 0, 0);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-bottom: 10px; /* Add spacing between buttons */
+}
+
+.menu:hover {
+  background-color: #002b6b;
+}
+
+.diff {
+  font-family: bangers;
+  font-size: 30;
+  padding: 10;
+  -webkit-text-stroke: 0px rgb(255, 255, 255);
+  text-align: center;
+  letter-spacing: 1.5;
+}
+
+
+.test2 {
+  position: absolute;
+  height: 100%;
+  width: 19.5%;
+  right: 0;
+  background-color: #d3d3d33f;
+  display: flex;
+  flex-direction: column; /* Set the direction to vertical */
+  align-items: center; /* Align items to the center horizontally */
+}
+
+#speed {
+  display: flex;
+  flex-direction: row; /* Set the direction to vertical */
+  align-items: center; /* Align items to the center horizontally */
+}
+.speedBtn {
+  background-color: #2476f1;
+  font-size: medium;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 50px;
+}
+.speedBtn:hover {
+  background-color: #002b6b;
+}
+
+#recSpeed {
+  background-color: #2476f1;
+  font-size: medium;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 50px;
+}
+#btn3 {
+  margin-bottom: -10;
+}
+
+
+#resetSpeed {
+  margin-top: 10;
+}
+
+#speedInfo{
+  font-family: bangers;
+  font-size: 25;
+  margin-bottom: 10;
+  margin-top: 20;
+}
+
+#difficulty{
+  margin-bottom: 1;
+
+}
