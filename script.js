@@ -1,20 +1,52 @@
 window.onload = () => {
-  const btn = document.getElementById("jump");
+  // Canvas and context
   const canvas = document.getElementById("canvas");
   const context = canvas.getContext("2d");
   let canvW = canvas.width;
   let canvH = canvas.height;
+
+  // Ball properties
   let ballR = 30;
   let ballx = 200;
   let bally = canvH / 2 - ballR;
+  let ballSpeed = 30;
+  let gravity = 25;
+
+  // Game state
   let lost = false;
   let stopGame = false;
   let pause = false;
-  let recSpeed = 1;
-  let ballSpeed = 30;
+  let collision = false;
+  let t = Date.now();
+
+  // Coin properties
   const coin = new Image();
   coin.src = "coin.png";
+  let coinr = 50;
+  let coinx = Math.random() * (canvW - coinr);
+  let coiny = Math.random() * (canvH - coinr);
 
+  // Rectangle properties
+  let recx = canvW;
+  let rech = 100;
+  let recw = 50;
+  let recy = 0;
+  let min = 100;
+  let max = 300;
+
+  // Score
+  let score = 0;
+
+  // Speed control
+  let recSpeed = 1;
+
+  // Element references
+  const btn = document.getElementById("jump");
+  const showRecSpeed = document.getElementById("recSpeed");
+  const plusSpeed = document.getElementById("plusSpeed");
+  const minusSpeed = document.getElementById("minusSpeed");
+
+  // Keyboard event handler
   document.onkeydown = function (event) {
     if (!stopGame) {
       if (event.code === "ArrowLeft" || event.code === "KeyA") {
@@ -58,64 +90,51 @@ window.onload = () => {
     }
   };
 
-  let collision = false;
-  let t = Date.now();
-  let coinr =50;
-  let coinx = Math.random() * (canvW - coinr);
-  let coiny = Math.random() * (canvH - coinr);
-  let score = 0;
-  let gravity = 25;
-  let recx = canvW;
-  let rech = 100;
-  let recy = 0;
-  let recw = 50;
-  let min = 100;
-  let max = 300;
-
-  if (!lost) {
-    document.addEventListener("keydown", function (event) {
-      if (event.code === "Escape") {
-        stopGame = !stopGame;
-        pause = !pause;
-        if (!stopGame && !pause) {
-          t = Date.now(); // Reset the time reference
-          draw(); // Resume the game by calling the draw function
-        }
+  // Escape key event listener
+  document.addEventListener("keydown", function (event) {
+    if (!lost && event.code === "Escape") {
+      stopGame = !stopGame;
+      pause = !pause;
+      if (!stopGame && !pause) {
+        t = Date.now(); // Reset the time reference
+        draw(); // Resume the game by calling the draw function
       }
-    });
-  }
-
-  document.getElementById("resetSpeed").onclick=()=>{
-    recSpeed=1;
-    showRecSpeed.textContent=recSpeed;
-  }
-
-  var showRecSpeed=document.getElementById("recSpeed");
-  showRecSpeed.textContent=recSpeed;
-  var plusSpeed=document.getElementById("plusSpeed");
-  var minusSpeed=document.getElementById("minusSpeed");
-  plusSpeed.onclick=()=>{
-    recSpeed++;
-    showRecSpeed.textContent=recSpeed;
-  }
-  minusSpeed.onclick=()=>{
-    if(recSpeed>1){
-      recSpeed--;
-      showRecSpeed.textContent=recSpeed;
     }
-  }
+  });
 
-  
+  // Reset speed button event listener
+  document.getElementById("resetSpeed").onclick = () => {
+    recSpeed = 1;
+    showRecSpeed.textContent = recSpeed;
+  };
+
+  // Plus speed button event listener
+  plusSpeed.onclick = () => {
+    recSpeed++;
+    showRecSpeed.textContent = recSpeed;
+  };
+
+  // Minus speed button event listener
+  minusSpeed.onclick = () => {
+    if (recSpeed > 1) {
+      recSpeed--;
+      showRecSpeed.textContent = recSpeed;
+    }
+  };
+
+  // Draw function
   function draw() {
-    showRecSpeed.textContent=recSpeed;
+    showRecSpeed.textContent = recSpeed;
     const timePassed = (Date.now() - t) / 1000;
     t = Date.now();
     const fps = Math.round(1 / timePassed);
     context.clearRect(0, 0, canvW, canvH);
+
     if (bally <= canvH - ballR) {
       gravity += 50 * timePassed;
       bally += gravity * timePassed;
     }
+
     context.beginPath();
     context.arc(ballx, bally, ballR, 0, 2 * Math.PI);
     context.fillStyle = "red";
@@ -160,11 +179,11 @@ window.onload = () => {
       stopGame = true;
       score = 0;
     }
+
     if (bally > canvH - ballR) {
       score = 0;
       lost = true;
       stopGame = true;
-      
     }
 
     const distance = Math.sqrt(
@@ -188,7 +207,7 @@ window.onload = () => {
       context.strokeStyle = "black";
       context.lineWidth = 2.5;
       context.fillText("Paused", 200, 210);
-      context.strokeText("Paused", 200, 210) // Toggle the pause state when the Space key is pressed
+      context.strokeText("Paused", 200, 210); // Toggle the pause state when the Space key is pressed
       context.lineWidth = 1;
     } else if (stopGame && (lost || collision)) {
       context.fillStyle = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black
@@ -204,19 +223,20 @@ window.onload = () => {
       context.fillText("Press Space to Try Again", 170, 290);
       context.strokeText("Press Space to Try Again", 170, 290);
       context.lineWidth = 1;
+
       document.addEventListener("keydown", function (event) {
         if (event.code === "Space" && (collision || lost)) {
           resetGame();
           // Call draw function to restart the game
-          window.requestAnimationFrame(draw); 
+          window.requestAnimationFrame(draw);
         }
       });
     }
   }
-  
 
+  // Reset the game state
   function resetGame() {
-    recSpeed=1;
+    recSpeed = 1;
     ballx = 200;
     bally = canvH / 2 - ballR;
     stopGame = false;
@@ -232,6 +252,7 @@ window.onload = () => {
     coiny = Math.random() * (canvH - 50);
   }
 
+  // Initial text on canvas
   context.font = "90px bangers";
   context.fillStyle = "white";
   context.strokeStyle = "black";
@@ -239,11 +260,14 @@ window.onload = () => {
   context.strokeText("Jumper Game", 90, 200);
   context.fillText("Jumper Game", 90, 200);
   context.lineWidth = 1;
- 
+
+  // Button click event
   btn.onclick = function () {
     btn.style.display = "none";
     context.clearRect(0, 0, canvas.width, canvas.height);
     resetGame();
     draw();
   };
+
+  
 };

@@ -7,15 +7,15 @@ body {
   background-color: #2476f1;
   color: rgb(255, 255, 255);
   border-radius: 700px;
-  width: 50%;
-  height: 100;
+  width: 50vw;
+  height: 10vw;
   position: absolute;
   top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: bangers;
-  font-size: 70;
-  -webkit-text-stroke: 2.5px rgb(0, 0, 0);
+  font-size: 7vw;
+  -webkit-text-stroke: 0.3vw rgb(0, 0, 0);
 }
 #jump:hover {
   background-color: #013e99;
@@ -47,7 +47,7 @@ canvas {
 .banger {
   text-align: center;
   font-family: bangers;
-  font-size: 50;
+  font-size: 2.6vw;
   line-height: 0.3;
   -webkit-text-stroke: 0.7px rgb(255, 255, 255);
 }
@@ -58,12 +58,13 @@ canvas {
 .menu {
   background-color: #2476f1;
   font-family: bangers;
-  font-size: medium;
-  -webkit-text-stroke: 0.9px rgb(0, 0, 0);
+  font-size: 1.7vw;
+  -webkit-text-stroke: 0.1vw rgb(0, 0, 0);
   color: white;
-  padding: 10px 20px;
-  border-radius: 50px;
-  margin-bottom: 10px; /* Add spacing between buttons */
+  padding: 1vw 2vw;
+  border-radius: 50vw;
+  width: 12vw;
+  margin-bottom: 0.8vw; /* Add spacing between buttons */
 }
 
 .menu:hover {
@@ -72,7 +73,7 @@ canvas {
 
 .diff {
   font-family: bangers;
-  font-size: 30;
+  font-size: 3.2vw;
   padding: 10;
   -webkit-text-stroke: 0px rgb(255, 255, 255);
   text-align: center;
@@ -85,7 +86,7 @@ canvas {
   height: 100%;
   width: 19.5%;
   right: 0;
-  background-color: #d3d3d33f;
+  background-color: #315169be;
   display: flex;
   flex-direction: column; /* Set the direction to vertical */
   align-items: center; /* Align items to the center horizontally */
@@ -98,10 +99,10 @@ canvas {
 }
 .speedBtn {
   background-color: #2476f1;
-  font-size: medium;
+  font-size: 2vw;
   color: white;
-  padding: 10px 15px;
-  border-radius: 50px;
+  padding: 1vw 1.5vw;
+  border-radius: 50vw;
 }
 .speedBtn:hover {
   background-color: #002b6b;
@@ -109,10 +110,11 @@ canvas {
 
 #recSpeed {
   background-color: #2476f1;
-  font-size: medium;
+  font-size: 2vw;
+  font-family: bangers;
   color: white;
-  padding: 10px 15px;
-  border-radius: 50px;
+  padding: 1vw 1.8vw;
+  border-radius: 5vw;
 }
 #btn3 {
   margin-bottom: -10;
@@ -125,12 +127,11 @@ canvas {
 
 #speedInfo{
   font-family: bangers;
-  font-size: 25;
+  font-size: 2.5vw;
   margin-bottom: 10;
   margin-top: 20;
 }
 
 #difficulty{
   margin-bottom: 1;
-
 }
