@@ -33,7 +33,7 @@ canvas {
   background-color: #1a374d;
 }
 
-.rightBox {
+.leftBox {
   position: absolute;
   height: 100%;
   width: 19.5%;
@@ -80,7 +80,7 @@ canvas {
 }
 
 
-.leftBox {
+.rightBox {
   position: absolute;
   height: 100%;
   width: 19.5%;
@@ -93,8 +93,9 @@ canvas {
 
 #speed {
   display: flex;
-  flex-direction: row; /* Set the direction to vertical */
+  flex-direction: row; /* Set the direction to horizontal */
   align-items: center; /* Align items to the center horizontally */
+  
 }
 .speedBtn {
   background-color: #2476f1;
@@ -115,7 +116,7 @@ canvas {
   padding: 1vw 1.8vw;
   border-radius: 5vw;
 }
-#btn3 {
+#hard {
   margin-bottom: -1vh;
 }
 

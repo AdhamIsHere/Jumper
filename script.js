@@ -41,10 +41,13 @@ window.onload = () => {
   let recSpeed = 1;
 
   // Element references
-  const btn = document.getElementById("jump");
+  const startBtn = document.getElementById("jump");
   const showRecSpeed = document.getElementById("recSpeed");
   const plusSpeed = document.getElementById("plusSpeed");
   const minusSpeed = document.getElementById("minusSpeed");
+  const easyBtn=document.getElementById("easy");
+  const mediumBtn=document.getElementById("medium");
+  const hardBtn=document.getElementById("hard");
 
   // Keyboard event handler
   document.onkeydown = function (event) {
@@ -262,8 +265,8 @@ window.onload = () => {
   context.lineWidth = 1;
 
   // Button click event
-  btn.onclick = function () {
-    btn.style.display = "none";
+  startBtn.onclick = function () {
+    startBtn.style.display = "none";
     context.clearRect(0, 0, canvas.width, canvas.height);
     resetGame();
     draw();
