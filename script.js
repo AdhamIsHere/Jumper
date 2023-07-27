@@ -18,6 +18,7 @@ window.onload = () => {
   let pause = false;
   let collision = false;
   let t = Date.now();
+  let difficulty = "easy";
 
   // Coin properties
   const coin = new Image();
@@ -26,13 +27,18 @@ window.onload = () => {
   let coinx = Math.random() * (canvW - coinr);
   let coiny = Math.random() * (canvH - coinr);
 
-  // Rectangle properties
-  let recx = canvW;
-  let rech = 100;
-  let recw = 50;
-  let recy = 0;
+  // Rectangle height range
   let min = 100;
   let max = 300;
+
+  // Rectangle properties
+  let recx = canvW;
+  let rech = Math.floor(Math.random() * (max - min) + min);
+  let recw = 50;
+  let recy = 0;
+  let rech2 = Math.floor(Math.random() * (max - min) + min);
+
+  
 
   // Score
   let score = 0;
@@ -45,9 +51,9 @@ window.onload = () => {
   const showRecSpeed = document.getElementById("recSpeed");
   const plusSpeed = document.getElementById("plusSpeed");
   const minusSpeed = document.getElementById("minusSpeed");
-  const easyBtn=document.getElementById("easy");
-  const mediumBtn=document.getElementById("medium");
-  const hardBtn=document.getElementById("hard");
+  const easyBtn = document.getElementById("easy");
+  const mediumBtn = document.getElementById("medium");
+  const hardBtn = document.getElementById("hard");
 
   // Keyboard event handler
   document.onkeydown = function (event) {
@@ -125,6 +131,20 @@ window.onload = () => {
     }
   };
 
+  // Easy button event listener
+  easyBtn.onclick = () => {
+    difficulty = "easy";
+  };
+
+  // Medium button event listener
+  mediumBtn.onclick = () => {
+    difficulty = "medium";
+  };
+
+  // Hard button event listener
+  hardBtn.onclick = () => {
+    difficulty = "hard";
+  };
   // Draw function
   function draw() {
     showRecSpeed.textContent = recSpeed;
@@ -155,11 +175,23 @@ window.onload = () => {
     context.fillStyle = "#256D85";
     context.fill();
     context.stroke();
+
+    // Rectangle movement
     recx -= recSpeed;
 
     if (recx <= 0) {
       recx = canvW;
       rech = Math.floor(Math.random() * (max - min) + min);
+      rech2 = Math.floor(Math.random() * (max - min) + min);
+    }
+
+    // Medium mode
+    if (difficulty === "medium") {
+      context.beginPath();
+      context.rect(recx + 100, canvH, recw, -rech2);
+      context.fillStyle = "#256D85";
+      context.fill();
+      context.stroke();
     }
 
     context.font = "20px courier";
@@ -170,12 +202,7 @@ window.onload = () => {
     context.fillText("Score: " + score, 20, 60);
 
     // Check if a collision has occurred
-    if (
-      ballx + ballR >= recx && // Right edge of the ball is to the right of the left edge of the rectangle
-      ballx - ballR <= recx + recw && // Left edge of the ball is to the left of the right edge of the rectangle
-      bally - ballR <= canvH && // Top edge of the ball is above the bottom edge of the rectangle
-      bally + ballR >= canvH - rech // Bottom edge of the ball is below the top edge of the rectangle
-    ) {
+    if (detectCollision()) {
       // Collision detected
       // Perform actions accordingly
       collision = true;
@@ -255,6 +282,19 @@ window.onload = () => {
     coiny = Math.random() * (canvH - 50);
   }
 
+  function detectCollision() {
+    if (
+      ballx + ballR >= recx && // Right edge of the ball is to the right of the left edge of the rectangle
+      ballx - ballR <= recx + recw && // Left edge of the ball is to the left of the right edge of the rectangle
+      bally - ballR <= canvH && // Top edge of the ball is above the bottom edge of the rectangle
+      bally + ballR >= canvH - rech // Bottom edge of the ball is below the top edge of the rectangle
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // Initial text on canvas
   context.font = "90px bangers";
   context.fillStyle = "white";
@@ -271,6 +311,4 @@ window.onload = () => {
     resetGame();
     draw();
   };
-
-  
 };
