@@ -32,19 +32,74 @@ window.onload = () => {
   let max = 300;
 
   // Rectangle properties
-  let recx = canvW;
-  let rech = Math.floor(Math.random() * (max - min) + min);
-  let recw = 50;
-  let recy = 0;
-  let rech2 = Math.floor(Math.random() * (max - min) + min);
-
-  
-
-  // Score
-  let score = 0;
+  // let recx = canvW;
+  // let rech = Math.floor(Math.random() * (max - min) + min);
+  // let recw = 50;
+  // let recy = 0;
+  // let rech2 = Math.floor(Math.random() * (max - min) + min);
 
   // Speed control
   let recSpeed = 1;
+
+  function Rectangle(recx, rech, recw, recy, recSpeed) {
+    this.recx = recx;
+    this.rech = rech;
+    this.recw = recw;
+    this.recy = recy;
+    this.recSpeed = recSpeed;
+    this.say = (x) => {
+      console.log(this.recx);
+    };
+    this.moveRec = () => {
+      this.recx -= this.recSpeed;
+      if (this.recx <= 0) {
+        this.recx = canvW;
+        this.rech = Math.floor(Math.random() * (max - min) + min);
+      }
+    };
+
+    this.drawRec = () => {
+      context.beginPath();
+      context.rect(this.recx, this.recy, this.recw, -this.rech);
+      context.fillStyle = "#256D85";
+      context.fill();
+      context.stroke();
+      console.log("drawing");
+    };
+
+    this.resetRec = () => {
+      this.recx = recx;
+      this.rech = rech;
+      this.recw = recw;
+      this.recy = recy;
+      this.recSpeed = recSpeed;
+    };
+
+    // Collision detection
+    this.detectCollision = () => {
+      if (
+        ballx + ballR >= this.recx && // Right edge of the ball is to the right of the left edge of the rectangle
+        ballx - ballR <= this.recx + this.recw && // Left edge of the ball is to the left of the right edge of the rectangle
+        bally - ballR <= canvH && // Top edge of the ball is above the bottom edge of the rectangle
+        bally + ballR >= canvH - this.rech // Bottom edge of the ball is below the top edge of the rectangle
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+  }
+
+  let easyRec = new Rectangle(
+    canvW,
+    Math.floor(Math.random() * (max - min) + min),
+    50,
+    canvH,
+    recSpeed
+  );
+
+  // Score
+  let score = 0;
 
   // Element references
   const startBtn = document.getElementById("jump");
@@ -55,7 +110,7 @@ window.onload = () => {
   const mediumBtn = document.getElementById("medium");
   const hardBtn = document.getElementById("hard");
 
-  // Keyboard event handler
+  // Movement event handler
   document.onkeydown = function (event) {
     if (!stopGame) {
       if (event.code === "ArrowLeft" || event.code === "KeyA") {
@@ -113,21 +168,21 @@ window.onload = () => {
 
   // Reset speed button event listener
   document.getElementById("resetSpeed").onclick = () => {
-    recSpeed = 1;
-    showRecSpeed.textContent = recSpeed;
+    easyRec.recSpeed = 1;
+    showRecSpeed.textContent = easyRec.recSpeed;
   };
 
   // Plus speed button event listener
   plusSpeed.onclick = () => {
-    recSpeed++;
-    showRecSpeed.textContent = recSpeed;
+    easyRec.recSpeed += 1;
+    showRecSpeed.textContent = easyRec.recSpeed;
   };
 
   // Minus speed button event listener
   minusSpeed.onclick = () => {
-    if (recSpeed > 1) {
-      recSpeed--;
-      showRecSpeed.textContent = recSpeed;
+    if (easyRec.recSpeed > 1) {
+      easyRec.recSpeed -= 1;
+      showRecSpeed.textContent = easyRec.recSpeed;
     }
   };
 
@@ -170,20 +225,11 @@ window.onload = () => {
     context.fill();
     context.drawImage(coin, coinx - 20, coiny - 20, 40, 40);
 
-    context.beginPath();
-    context.rect(recx, canvH, recw, -rech);
-    context.fillStyle = "#256D85";
-    context.fill();
-    context.stroke();
+    // Drawing Rectangle
+    easyRec.drawRec();
 
     // Rectangle movement
-    recx -= recSpeed;
-
-    if (recx <= 0) {
-      recx = canvW;
-      rech = Math.floor(Math.random() * (max - min) + min);
-      rech2 = Math.floor(Math.random() * (max - min) + min);
-    }
+    easyRec.moveRec();
 
     // Medium mode
     if (difficulty === "medium") {
@@ -202,7 +248,7 @@ window.onload = () => {
     context.fillText("Score: " + score, 20, 60);
 
     // Check if a collision has occurred
-    if (detectCollision()) {
+    if (easyRec.detectCollision()) {
       // Collision detected
       // Perform actions accordingly
       collision = true;
@@ -210,12 +256,14 @@ window.onload = () => {
       score = 0;
     }
 
+    // Check if ball touches the ground
     if (bally > canvH - ballR) {
       score = 0;
       lost = true;
       stopGame = true;
     }
 
+    // Calculate distance between ball and coin
     const distance = Math.sqrt(
       Math.pow(ballx - coinx, 2) + Math.pow(bally - coiny, 2)
     );
@@ -266,7 +314,6 @@ window.onload = () => {
 
   // Reset the game state
   function resetGame() {
-    recSpeed = 1;
     ballx = 200;
     bally = canvH / 2 - ballR;
     stopGame = false;
@@ -276,23 +323,9 @@ window.onload = () => {
     gravity = 25;
     score = 0;
     t = Date.now();
-    recx = canvW;
-    rech = 100;
     coinx = Math.random() * (canvW - 50);
     coiny = Math.random() * (canvH - 50);
-  }
-
-  function detectCollision() {
-    if (
-      ballx + ballR >= recx && // Right edge of the ball is to the right of the left edge of the rectangle
-      ballx - ballR <= recx + recw && // Left edge of the ball is to the left of the right edge of the rectangle
-      bally - ballR <= canvH && // Top edge of the ball is above the bottom edge of the rectangle
-      bally + ballR >= canvH - rech // Bottom edge of the ball is below the top edge of the rectangle
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    easyRec.resetRec();
   }
 
   // Initial text on canvas
