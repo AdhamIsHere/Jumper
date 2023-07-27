@@ -202,7 +202,6 @@ window.onload = () => {
   };
   // Draw function
   function draw() {
-    showRecSpeed.textContent = recSpeed;
     const timePassed = (Date.now() - t) / 1000;
     t = Date.now();
     const fps = Math.round(1 / timePassed);
