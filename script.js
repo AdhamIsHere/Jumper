@@ -39,19 +39,21 @@ window.onload = () => {
   // let rech2 = Math.floor(Math.random() * (max - min) + min);
 
   // Speed control
-  let recSpeed = 1;
+  //let recSpeed = 1;
 
-  function Rectangle(recx, rech, recw, recy, recSpeed) {
+  function Rectangle(recx, rech, recw, recy) {
     this.recx = recx;
     this.rech = rech;
     this.recw = recw;
     this.recy = recy;
-    this.recSpeed = recSpeed;
-    this.temp=this.recx;
-  
+    this.temp = this.recx;
+
+    // Static variable (defined on the function constructor)
+    Rectangle.recSpeed = 1;
+
     this.moveRec = () => {
-      this.recx -= this.recSpeed;
-      if (this.recx+this.recw <= 0) {
+      this.recx -= Rectangle.recSpeed; // Use the static variable here
+      if (this.recx + this.recw <= 0) {
         this.recx = this.temp;
         this.rech = Math.floor(Math.random() * (max - min) + min);
       }
@@ -70,7 +72,7 @@ window.onload = () => {
       this.rech = rech;
       this.recw = recw;
       this.recy = recy;
-      this.recSpeed = recSpeed;
+      // Do not reset the static variable here since it is shared among all instances
     };
 
     // Collision detection
@@ -97,7 +99,7 @@ window.onload = () => {
   );
 
   let mediumRec = new Rectangle(
-    easyRec.recx+100,
+    easyRec.recx + 100,
     Math.floor(Math.random() * (max - min) + min),
     50,
     canvH,
@@ -174,21 +176,21 @@ window.onload = () => {
 
   // Reset speed button event listener
   document.getElementById("resetSpeed").onclick = () => {
-    easyRec.recSpeed = 1;
-    showRecSpeed.textContent = easyRec.recSpeed;
+    Rectangle.recSpeed = 1;
+    showRecSpeed.textContent = Rectangle.recSpeed;
   };
 
   // Plus speed button event listener
   plusSpeed.onclick = () => {
-    easyRec.recSpeed += 1;
-    showRecSpeed.textContent = easyRec.recSpeed;
+    Rectangle.recSpeed += 1;
+    showRecSpeed.textContent = Rectangle.recSpeed;
   };
 
   // Minus speed button event listener
   minusSpeed.onclick = () => {
-    if (easyRec.recSpeed > 1) {
-      easyRec.recSpeed -= 1;
-      showRecSpeed.textContent = easyRec.recSpeed;
+    if (Rectangle.recSpeed > 1) {
+      Rectangle.recSpeed -= 1;
+      showRecSpeed.textContent = Rectangle.recSpeed;
     }
   };
 
@@ -196,24 +198,24 @@ window.onload = () => {
   easyBtn.onclick = () => {
     difficulty = "easy";
     easyBtn.style.backgroundColor = "#0a2247";
-    mediumBtn.style.backgroundColor="#2476f1";
-    hardBtn.style.backgroundColor="#2476f1";
+    mediumBtn.style.backgroundColor = "#2476f1";
+    hardBtn.style.backgroundColor = "#2476f1";
   };
 
   // Medium button event listener
   mediumBtn.onclick = () => {
     difficulty = "medium";
-    easyBtn.style.backgroundColor="#2476f1";
-    mediumBtn.style.backgroundColor="#0a2247";
-    hardBtn.style.backgroundColor="#2476f1";
+    easyBtn.style.backgroundColor = "#2476f1";
+    mediumBtn.style.backgroundColor = "#0a2247";
+    hardBtn.style.backgroundColor = "#2476f1";
   };
 
   // Hard button event listener
   hardBtn.onclick = () => {
     difficulty = "hard";
-    easyBtn.style.backgroundColor="#2476f1";
-    mediumBtn.style.backgroundColor="#2476f1";
-    hardBtn.style.backgroundColor="#0a2247";
+    easyBtn.style.backgroundColor = "#2476f1";
+    mediumBtn.style.backgroundColor = "#2476f1";
+    hardBtn.style.backgroundColor = "#0a2247";
   };
   // Draw function
   function draw() {
@@ -249,8 +251,7 @@ window.onload = () => {
     mediumRec.drawRec("#856D85");
     if (difficulty === "medium") {
       mediumRec.moveRec();
-    }
-    else{
+    } else {
       mediumRec.resetRec();
     }
 
@@ -262,7 +263,7 @@ window.onload = () => {
     context.fillText("Score: " + score, 20, 60);
 
     // Check if a collision has occurred
-    if (easyRec.detectCollision()||mediumRec.detectCollision()) {
+    if (easyRec.detectCollision() || mediumRec.detectCollision()) {
       // Collision detected
       // Perform actions accordingly
       collision = true;
@@ -292,30 +293,9 @@ window.onload = () => {
     if (!stopGame) {
       window.requestAnimationFrame(draw);
     } else if (stopGame && pause) {
-      context.fillStyle = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black
-      context.fillRect(0, 0, canvW, canvH); // Draw overlay rectangle
-      context.font = "90px bangers";
-      context.fillStyle = "white";
-      context.strokeStyle = "black";
-      context.lineWidth = 2.5;
-      context.fillText("Paused", 200, 210);
-      context.strokeText("Paused", 200, 210); // Toggle the pause state when the Space key is pressed
-      context.lineWidth = 1;
+      pauseScreen();
     } else if (stopGame && (lost || collision)) {
-      context.fillStyle = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black
-      context.fillRect(0, 0, canvW, canvH); // Draw overlay rectangle
-      context.font = "90px bangers";
-      context.strokeStyle = "black";
-      context.lineWidth = 1.7;
-      context.fillStyle = "white";
-      context.fillText("You Lost", 170, 210); // Display "You Lost" text
-      context.strokeText("You Lost", 170, 210);
-      context.font = "30px bangers";
-      context.fillStyle = "white";
-      context.fillText("Press Space to Try Again", 170, 290);
-      context.strokeText("Press Space to Try Again", 170, 290);
-      context.lineWidth = 1;
-
+      lossScreen();
       document.addEventListener("keydown", function (event) {
         if (event.code === "Space" && (collision || lost)) {
           resetGame();
@@ -324,6 +304,36 @@ window.onload = () => {
         }
       });
     }
+  }
+
+  // Pause Screen
+  function pauseScreen() {
+    context.fillStyle = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black
+    context.fillRect(0, 0, canvW, canvH); // Draw overlay rectangle
+    context.font = "90px bangers";
+    context.fillStyle = "white";
+    context.strokeStyle = "black";
+    context.lineWidth = 2.5;
+    context.fillText("Paused", 200, 210);
+    context.strokeText("Paused", 200, 210); // Toggle the pause state when the Space key is pressed
+    context.lineWidth = 1;
+  }
+
+  // loss screen
+  function lossScreen() {
+    context.fillStyle = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black
+    context.fillRect(0, 0, canvW, canvH); // Draw overlay rectangle
+    context.font = "90px bangers";
+    context.strokeStyle = "black";
+    context.lineWidth = 1.7;
+    context.fillStyle = "white";
+    context.fillText("You Lost", 170, 210); // Display "You Lost" text
+    context.strokeText("You Lost", 170, 210);
+    context.font = "30px bangers";
+    context.fillStyle = "white";
+    context.fillText("Press Space to Try Again", 170, 290);
+    context.strokeText("Press Space to Try Again", 170, 290);
+    context.lineWidth = 1;
   }
 
   // Reset the game state
@@ -341,7 +351,8 @@ window.onload = () => {
     coiny = Math.random() * (canvH - 50);
     easyRec.resetRec();
     mediumRec.resetRec();
-    showRecSpeed.textContent=1;
+    Rectangle.recSpeed = 1;
+    showRecSpeed.textContent = 1;
   }
 
   // Initial text on canvas
