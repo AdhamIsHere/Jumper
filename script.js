@@ -47,24 +47,22 @@ window.onload = () => {
     this.recw = recw;
     this.recy = recy;
     this.recSpeed = recSpeed;
-    this.say = (x) => {
-      console.log(this.recx);
-    };
+    this.temp=this.recx;
+  
     this.moveRec = () => {
       this.recx -= this.recSpeed;
       if (this.recx <= 0) {
-        this.recx = canvW;
+        this.recx = this.temp;
         this.rech = Math.floor(Math.random() * (max - min) + min);
       }
     };
 
-    this.drawRec = () => {
+    this.drawRec = (x) => {
       context.beginPath();
       context.rect(this.recx, this.recy, this.recw, -this.rech);
-      context.fillStyle = "#256D85";
+      context.fillStyle = x;
       context.fill();
       context.stroke();
-      console.log("drawing");
     };
 
     this.resetRec = () => {
@@ -92,6 +90,14 @@ window.onload = () => {
 
   let easyRec = new Rectangle(
     canvW,
+    Math.floor(Math.random() * (max - min) + min),
+    50,
+    canvH,
+    recSpeed
+  );
+
+  let mediumRec = new Rectangle(
+    easyRec.recx+100,
     Math.floor(Math.random() * (max - min) + min),
     50,
     canvH,
@@ -189,16 +195,25 @@ window.onload = () => {
   // Easy button event listener
   easyBtn.onclick = () => {
     difficulty = "easy";
+    easyBtn.style.backgroundColor = "#0a2247";
+    mediumBtn.style.backgroundColor="#2476f1";
+    hardBtn.style.backgroundColor="#2476f1";
   };
 
   // Medium button event listener
   mediumBtn.onclick = () => {
     difficulty = "medium";
+    easyBtn.style.backgroundColor="#2476f1";
+    mediumBtn.style.backgroundColor="#0a2247";
+    hardBtn.style.backgroundColor="#2476f1";
   };
 
   // Hard button event listener
   hardBtn.onclick = () => {
     difficulty = "hard";
+    easyBtn.style.backgroundColor="#2476f1";
+    mediumBtn.style.backgroundColor="#2476f1";
+    hardBtn.style.backgroundColor="#0a2247";
   };
   // Draw function
   function draw() {
@@ -225,18 +240,18 @@ window.onload = () => {
     context.drawImage(coin, coinx - 20, coiny - 20, 40, 40);
 
     // Drawing Rectangle
-    easyRec.drawRec();
+    easyRec.drawRec("#256D85");
 
     // Rectangle movement
     easyRec.moveRec();
 
     // Medium mode
+    mediumRec.drawRec("#856D85");
     if (difficulty === "medium") {
-      context.beginPath();
-      context.rect(recx + 100, canvH, recw, -rech2);
-      context.fillStyle = "#256D85";
-      context.fill();
-      context.stroke();
+      mediumRec.moveRec();
+    }
+    else{
+      mediumRec.resetRec();
     }
 
     context.font = "20px courier";
@@ -247,7 +262,7 @@ window.onload = () => {
     context.fillText("Score: " + score, 20, 60);
 
     // Check if a collision has occurred
-    if (easyRec.detectCollision()) {
+    if (easyRec.detectCollision()||mediumRec.detectCollision()) {
       // Collision detected
       // Perform actions accordingly
       collision = true;
@@ -325,6 +340,7 @@ window.onload = () => {
     coinx = Math.random() * (canvW - 50);
     coiny = Math.random() * (canvH - 50);
     easyRec.resetRec();
+    mediumRec.resetRec();
   }
 
   // Initial text on canvas

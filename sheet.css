@@ -7,15 +7,15 @@ body {
   background-color: #2476f1;
   color: rgb(255, 255, 255);
   border-radius: 700px;
-  width: 50vw;
-  height: 10vw;
+  width: 50vmin;
+  height: 10vmin;
   position: absolute;
   top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: bangers;
-  font-size: 7vw;
-  -webkit-text-stroke: 0.3vw rgb(0, 0, 0);
+  font-size: 7vmin;
+  -webkit-text-stroke: 0.3vmin rgb(0, 0, 0);
 }
 #jump:hover {
   background-color: #013e99;
@@ -47,7 +47,7 @@ canvas {
 .banger {
   text-align: center;
   font-family: bangers;
-  font-size: 2.6vw;
+  font-size: 2.6vmin;
   line-height: 0.3;
   -webkit-text-stroke: 0.7px rgb(255, 255, 255);
 }
@@ -58,13 +58,13 @@ canvas {
 .menu {
   background-color: #2476f1;
   font-family: bangers;
-  font-size: 1.7vw;
-  -webkit-text-stroke: 0.1vw rgb(0, 0, 0);
+  font-size: 1.7vmin;
+  -webkit-text-stroke: 0.1vmin rgb(0, 0, 0);
   color: white;
-  padding: 1vw 2vw;
-  border-radius: 50vw;
-  width: 12vw;
-  margin-bottom: 0.8vw; /* Add spacing between buttons */
+  padding: 1vmin 2vmin;
+  border-radius: 50vmin;
+  width: 12vmin;
+  margin-bottom: 0.8vmin; /* Add spacing between buttons */
 }
 
 .menu:hover {
@@ -73,10 +73,10 @@ canvas {
 
 .diff {
   font-family: bangers;
-  font-size: 3.2vw;
-  padding: 1vw;
+  font-size: 3.2vmin;
+  padding: 1vmin;
   text-align: center;
-  letter-spacing: 0.1vw;
+  letter-spacing: 0.1vmin;
 }
 
 
@@ -84,7 +84,7 @@ canvas {
   position: absolute;
   height: 100%;
   width: 19.5%;
-  right: 0vw;
+  right: 0vmin;
   background-color: #315169be;
   display: flex;
   flex-direction: column; /* Set the direction to vertical */
@@ -99,10 +99,10 @@ canvas {
 }
 .speedBtn {
   background-color: #2476f1;
-  font-size: 2vw;
+  font-size: 2vmin;
   color: white;
-  padding: 1vw 1.5vw;
-  border-radius: 50vw;
+  padding: 1vmin 1.5vmin;
+  border-radius: 50vmin;
 }
 .speedBtn:hover {
   background-color: #002b6b;
@@ -110,28 +110,28 @@ canvas {
 
 #recSpeed {
   background-color: #2476f1;
-  font-size: 2vw;
+  font-size: 2vmin;
   font-family: bangers;
   color: white;
-  padding: 1vw 1.8vw;
-  border-radius: 5vw;
+  padding: 1vmin 1.8vmin;
+  border-radius: 5vmin;
 }
 #hard {
-  margin-bottom: -1vh;
+  margin-bottom: -1vmin;
 }
 
 
 #resetSpeed {
-  margin-top: 1vw;
+  margin-top: 1vmin;
 }
 
 #speedInfo{
   font-family: bangers;
-  font-size: 2.5vw;
-  margin-bottom: 1vw;
-  margin-top: 2vw;
+  font-size: 2.5vmin;
+  margin-bottom: 1vmin;
+  margin-top: 2vmin;
 }
 
 #difficulty{
-  margin-bottom: 0.1vw;
+  margin-bottom: 0.1vmin;
 }
