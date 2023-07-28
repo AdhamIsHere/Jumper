@@ -51,7 +51,7 @@ window.onload = () => {
   
     this.moveRec = () => {
       this.recx -= this.recSpeed;
-      if (this.recx <= 0) {
+      if (this.recx+this.recw <= 0) {
         this.recx = this.temp;
         this.rech = Math.floor(Math.random() * (max - min) + min);
       }
@@ -341,6 +341,7 @@ window.onload = () => {
     coiny = Math.random() * (canvH - 50);
     easyRec.resetRec();
     mediumRec.resetRec();
+    showRecSpeed.textContent=1;
   }
 
   // Initial text on canvas
