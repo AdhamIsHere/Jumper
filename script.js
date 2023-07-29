@@ -2,15 +2,8 @@ window.onload = () => {
   // Canvas and context
   const canvas = document.getElementById("canvas");
   const context = canvas.getContext("2d");
-  let canvW = canvas.width;
-  let canvH = canvas.height;
-
-  // Ball properties
-  let ballR = 30;
-  let ballx = 200;
-  let bally = canvH / 2 - ballR;
-  let ballSpeed = 30;
-  let gravity = 25;
+  const canvW = canvas.width;
+  const canvH = canvas.height;
 
   // Game state
   let lost = false;
@@ -18,100 +11,180 @@ window.onload = () => {
   let pause = false;
   let collision = false;
   let t = Date.now();
-  let difficulty = "easy";
-
-  // Coin properties
-  const coin = new Image();
-  coin.src = "coin.png";
-  let coinr = 50;
-  let coinx = Math.random() * (canvW - coinr);
-  let coiny = Math.random() * (canvH - coinr);
+  var difficulty = "easy";
 
   // Rectangle height range
   let min = 100;
   let max = 300;
 
-  // Rectangle properties
-  // let recx = canvW;
-  // let rech = Math.floor(Math.random() * (max - min) + min);
-  // let recw = 50;
-  // let recy = 0;
-  // let rech2 = Math.floor(Math.random() * (max - min) + min);
+  // Ball Class
+  class Ball {
+    constructor(ballR, ballSpeed, gravity) {
+      this.ballR = ballR;
+      this.ballSpeed = ballSpeed;
+      this.gravity = gravity;
+      this.ballx = 200;
+      this.bally = canvH / 2 - ballR;
+    }
 
-  // Speed control
-  //let recSpeed = 1;
+    Fall(x) {
+      if (this.bally <= canvH - this.ballR) {
+        this.gravity += 50 * x;
+        this.bally += this.gravity * x;
+      }
+    }
 
-  function Rectangle(recx, rech, recw, recy) {
-    this.recx = recx;
-    this.rech = rech;
-    this.recw = recw;
-    this.recy = recy;
-    this.temp = this.recx;
+    drawBall() {
+      context.beginPath();
+      context.arc(this.ballx, this.bally, this.ballR, 0, 2 * Math.PI);
+      context.fillStyle = "red";
+      context.fill();
+      context.stroke();
+    }
 
-    // Static variable (defined on the function constructor)
-    Rectangle.recSpeed = 1;
+    resetBall() {
+      this.ballx = 200;
+      this.bally = canvH / 2 - this.ballR;
+      this.gravity = 25;
+    }
+  }
 
-    this.moveRec = () => {
-      this.recx -= Rectangle.recSpeed; // Use the static variable here
+  // Rectangle class
+  class Rectangle {
+    constructor(recx, rech, recw, recy) {
+      this.recx = recx;
+      this.rech = rech;
+      this.recw = recw;
+      this.recy = recy;
+      this.temp = this.recx;
+      Rectangle.recSpeed = 1;
+    }
+
+    moveRec() {
+      this.recx -= Rectangle.recSpeed;
       if (this.recx + this.recw <= 0) {
         this.recx = this.temp;
         this.rech = Math.floor(Math.random() * (max - min) + min);
       }
-    };
+    }
 
-    this.drawRec = (x) => {
+    drawRec(x) {
       context.beginPath();
       context.rect(this.recx, this.recy, this.recw, -this.rech);
       context.fillStyle = x;
       context.fill();
       context.stroke();
-    };
+    }
 
-    this.resetRec = () => {
+    resetRec() {
       this.recx = recx;
       this.rech = rech;
       this.recw = recw;
       this.recy = recy;
-      // Do not reset the static variable here since it is shared among all instances
-    };
+    }
 
-    // Collision detection
-    this.detectCollision = () => {
+    detectCollision() {
       if (
-        ballx + ballR >= this.recx && // Right edge of the ball is to the right of the left edge of the rectangle
-        ballx - ballR <= this.recx + this.recw && // Left edge of the ball is to the left of the right edge of the rectangle
-        bally - ballR <= canvH && // Top edge of the ball is above the bottom edge of the rectangle
-        bally + ballR >= canvH - this.rech // Bottom edge of the ball is below the top edge of the rectangle
+        ball.ballx + ball.ballR >= this.recx &&
+        ball.ballx - ball.ballR <= this.recx + this.recw &&
+        ball.bally - ball.ballR <= canvH &&
+        ball.bally + ball.ballR >= canvH - this.rech
       ) {
         return true;
       } else {
         return false;
       }
-    };
+    }
+
+    static incrementSpeed() {
+      if (Rectangle.recSpeed <= 50) {
+        Rectangle.recSpeed += 1;
+        document.getElementById("recSpeed").textContent = Rectangle.recSpeed;
+      }
+    }
+
+    static decrementSpeed() {
+      if (difficulty != "hard") {
+        if (Rectangle.recSpeed > 1) {
+          Rectangle.recSpeed -= 1;
+          document.getElementById("recSpeed").textContent = Rectangle.recSpeed;
+        }
+      } else {
+        if (Rectangle.recSpeed > 5) {
+          Rectangle.recSpeed -= 1;
+          document.getElementById("recSpeed").textContent = Rectangle.recSpeed;
+        }
+      }
+    }
+
+    static ResetSpeed() {
+      if (difficulty != "hard") {
+        Rectangle.recSpeed = 1;
+        document.getElementById("recSpeed").textContent = Rectangle.recSpeed;
+      } else {
+        Rectangle.recSpeed = 5;
+        document.getElementById("recSpeed").textContent = Rectangle.recSpeed;
+      }
+    }
   }
 
-  let easyRec = new Rectangle(
-    canvW,
-    Math.floor(Math.random() * (max - min) + min),
-    50,
-    canvH,
-    recSpeed
-  );
+  // Coin Class
+  class Coin {
+    constructor(coinr, canvW, canvH) {
+      this.coin = new Image();
+      this.coin.src = "coin.png";
+      this.coinr = coinr;
+      this.coinx = Math.random() * (canvW - this.coinr);
+      this.coiny = Math.random() * (canvH - this.coinr);
+    }
 
-  let mediumRec = new Rectangle(
-    easyRec.recx + 100,
-    Math.floor(Math.random() * (max - min) + min),
-    50,
-    canvH,
-    recSpeed
-  );
+    drawCoin() {
+      context.beginPath();
+      context.arc(this.coinx, this.coiny, 20, 0, 2 * Math.PI);
+      context.fillStyle = "#e3c228";
+      context.fill();
+      context.drawImage(this.coin, this.coinx - 20, this.coiny - 20, 40, 40);
+    }
+
+    Randomize() {
+      this.coinx = Math.random() * (canvW - coinr);
+      this.coiny = Math.random() * (canvH - coinr);
+    }
+  }
+
+  // Rectangle Properties
+  const recx = canvW;
+  const rech = Math.floor(Math.random() * (max - min) + min);
+  const recw = 50;
+  const recy = canvH;
+
+  // Ball Properties
+  const ballR = 30;
+  const ballSpeed = 30;
+  const gravity = 25;
+
+  // Coin properties
+  const coinr = 50;
+  const coin = new Coin(coinr, canvW, canvH);
+
+  // Easy Rectangle
+  let easyRec = new Rectangle(recx, rech, recw, recy);
+
+  // Medium Rectangle
+  let mediumRec = new Rectangle(easyRec.recx + 100, rech, recw, recy);
+
+  // Hard Rectangle
+  let hardRec = new Rectangle(mediumRec.recx + 100, rech, recw, recy);
+
+  // Ball object
+  const ball = new Ball(ballR, ballSpeed, gravity);
 
   // Score
   let score = 0;
 
   // Element references
   const startBtn = document.getElementById("jump");
-  const showRecSpeed = document.getElementById("recSpeed");
+  const resetSpeed = document.getElementById("resetSpeed");
   const plusSpeed = document.getElementById("plusSpeed");
   const minusSpeed = document.getElementById("minusSpeed");
   const easyBtn = document.getElementById("easy");
@@ -123,40 +196,40 @@ window.onload = () => {
     if (!stopGame) {
       if (event.code === "ArrowLeft" || event.code === "KeyA") {
         // Left arrow key pressed
-        if (ballx > ballR) {
-          ballx -= ballSpeed;
+        if (ball.ballx > ball.ballR) {
+          ball.ballx -= ball.ballSpeed;
         }
       } else if (event.code === "ArrowUp" || event.code === "KeyW") {
         // Up arrow key pressed
-        if (bally > ballR) {
-          bally -= ballSpeed;
-          gravity = 25;
+        if (ball.bally > ball.ballR) {
+          ball.bally -= ball.ballSpeed;
+          ball.gravity = 25;
         }
       } else if (event.code === "ArrowRight" || event.code === "KeyD") {
         // Right arrow key pressed
-        if (ballx < canvW - ballR) {
-          ballx += ballSpeed;
+        if (ball.ballx < canvW - ball.ballR) {
+          ball.ballx += ball.ballSpeed;
         }
       } else if (
         (event.code === "ArrowLeft" && event.code === "ArrowUp") ||
         (event.code === "KeyA" && event.code === "KeyW")
       ) {
-        if (ballx > ballR) {
-          ballx -= ballSpeed;
+        if (ball.ballx > ball.ballR) {
+          ball.ballx -= ball.ballSpeed;
         }
-        bally -= ballSpeed;
+        ball.bally -= ball.ballSpeed;
       } else if (
         (event.code === "ArrowRight" && event.code === "ArrowUp") ||
         (event.code === "KeyD" && event.code === "KeyW")
       ) {
-        if (ballx < canvW - ballR) {
-          ballx += ballSpeed;
+        if (ball.ballx < canvW - ball.ballR) {
+          ball.ballx += ball.ballSpeed;
         }
-        bally -= ballSpeed;
+        ball.bally -= ball.ballSpeed;
       } else if (event.code === "ArrowRight" && event.code === "ArrowLeft") {
       } else if (event.code === "ArrowDown" || event.code === "KeyS") {
-        if (bally < canvH - ballR) {
-          bally += ballSpeed;
+        if (ball.bally < canvH - ball.ballR) {
+          ball.bally += ball.ballSpeed;
         }
       }
     }
@@ -175,23 +248,18 @@ window.onload = () => {
   });
 
   // Reset speed button event listener
-  document.getElementById("resetSpeed").onclick = () => {
-    Rectangle.recSpeed = 1;
-    showRecSpeed.textContent = Rectangle.recSpeed;
+  resetSpeed.onclick = () => {
+    Rectangle.ResetSpeed();
   };
 
   // Plus speed button event listener
   plusSpeed.onclick = () => {
-    Rectangle.recSpeed += 1;
-    showRecSpeed.textContent = Rectangle.recSpeed;
+    Rectangle.incrementSpeed();
   };
 
   // Minus speed button event listener
   minusSpeed.onclick = () => {
-    if (Rectangle.recSpeed > 1) {
-      Rectangle.recSpeed -= 1;
-      showRecSpeed.textContent = Rectangle.recSpeed;
-    }
+    Rectangle.decrementSpeed();
   };
 
   // Easy button event listener
@@ -213,6 +281,8 @@ window.onload = () => {
   // Hard button event listener
   hardBtn.onclick = () => {
     difficulty = "hard";
+    Rectangle.recSpeed = 5;
+    document.getElementById("recSpeed").textContent = Rectangle.recSpeed;
     easyBtn.style.backgroundColor = "#2476f1";
     mediumBtn.style.backgroundColor = "#2476f1";
     hardBtn.style.backgroundColor = "#0a2247";
@@ -224,22 +294,13 @@ window.onload = () => {
     const fps = Math.round(1 / timePassed);
     context.clearRect(0, 0, canvW, canvH);
 
-    if (bally <= canvH - ballR) {
-      gravity += 50 * timePassed;
-      bally += gravity * timePassed;
-    }
+    // Drawing the ball
+    ball.drawBall();
+    // Gravity Effect
+    ball.Fall(timePassed);
 
-    context.beginPath();
-    context.arc(ballx, bally, ballR, 0, 2 * Math.PI);
-    context.fillStyle = "red";
-    context.fill();
-    context.stroke();
-
-    context.beginPath();
-    context.arc(coinx, coiny, 20, 0, 2 * Math.PI);
-    context.fillStyle = "#e3c228";
-    context.fill();
-    context.drawImage(coin, coinx - 20, coiny - 20, 40, 40);
+    // Drawing coin
+    coin.drawCoin();
 
     // Drawing Rectangle
     easyRec.drawRec("#256D85");
@@ -249,10 +310,18 @@ window.onload = () => {
 
     // Medium mode
     mediumRec.drawRec("#856D85");
-    if (difficulty === "medium") {
+    if (difficulty === "medium" || difficulty === "hard") {
       mediumRec.moveRec();
     } else {
       mediumRec.resetRec();
+    }
+
+    // Hard mode
+    hardRec.drawRec("#454D8F");
+    if (difficulty === "hard") {
+      hardRec.moveRec();
+    } else {
+      hardRec.resetRec();
     }
 
     context.font = "20px courier";
@@ -263,7 +332,11 @@ window.onload = () => {
     context.fillText("Score: " + score, 20, 60);
 
     // Check if a collision has occurred
-    if (easyRec.detectCollision() || mediumRec.detectCollision()) {
+    if (
+      easyRec.detectCollision(ball) ||
+      mediumRec.detectCollision(ball) ||
+      hardRec.detectCollision(ball)
+    ) {
       // Collision detected
       // Perform actions accordingly
       collision = true;
@@ -272,7 +345,7 @@ window.onload = () => {
     }
 
     // Check if ball touches the ground
-    if (bally > canvH - ballR) {
+    if (ball.bally > canvH - ball.ballR) {
       score = 0;
       lost = true;
       stopGame = true;
@@ -280,14 +353,14 @@ window.onload = () => {
 
     // Calculate distance between ball and coin
     const distance = Math.sqrt(
-      Math.pow(ballx - coinx, 2) + Math.pow(bally - coiny, 2)
+      Math.pow(ball.ballx - coin.coinx, 2) +
+        Math.pow(ball.bally - coin.coiny, 2)
     );
 
-    if (distance < ballR + 20) {
+    if (distance < ball.ballR + 20) {
       // Collision detected
       score++;
-      coinx = Math.random() * (canvW - coinr);
-      coiny = Math.random() * (canvH - coinr);
+      coin.Randomize();
     }
 
     if (!stopGame) {
@@ -338,21 +411,17 @@ window.onload = () => {
 
   // Reset the game state
   function resetGame() {
-    ballx = 200;
-    bally = canvH / 2 - ballR;
     stopGame = false;
     collision = false;
     pause = false;
     lost = false;
-    gravity = 25;
     score = 0;
     t = Date.now();
-    coinx = Math.random() * (canvW - 50);
-    coiny = Math.random() * (canvH - 50);
+    ball.resetBall();
     easyRec.resetRec();
     mediumRec.resetRec();
-    Rectangle.recSpeed = 1;
-    showRecSpeed.textContent = 1;
+    hardRec.resetRec();
+    Rectangle.ResetSpeed();
   }
 
   // Initial text on canvas
