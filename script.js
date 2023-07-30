@@ -17,6 +17,45 @@ window.onload = () => {
   let min = 100;
   let max = 300;
 
+  // Sound Management classes
+  // Background
+  class BackgroundMusic {
+    constructor(path) {
+      this.music = new Audio(path);
+    }
+    play() {
+      this.music.play();
+    }
+    pause() {
+      this.music.pause();
+    }
+    loop() {
+      this.music.loop = true;
+    }
+    replay() {
+      this.music.pause();
+      this.music.currentTime = 0;
+      this.music.play();
+    }
+  }
+
+  // Sound effects
+  class SoundEffect {
+    constructor(path) {
+      this.effect = new Audio(path);
+      this.mute = false;
+      this.effect.volume -= 0.75;
+    }
+    toggleMute() {
+      this.mute = !this.mute;
+    }
+    play() {
+      if (!this.mute) {
+        this.effect.play();
+      }
+    }
+  }
+
   // Ball Class
   class Ball {
     constructor(ballR, ballSpeed, gravity) {
@@ -140,15 +179,32 @@ window.onload = () => {
 
     drawCoin() {
       context.beginPath();
-      context.arc(this.coinx, this.coiny, 20, 0, 2 * Math.PI);
+      context.arc(this.coinx, this.coiny, this.coinr, 0, 2 * Math.PI);
       context.fillStyle = "#e3c228";
       context.fill();
-      context.drawImage(this.coin, this.coinx - 20, this.coiny - 20, 40, 40);
+      context.drawImage(this.coin, this.coinx - this.coinr, this.coiny - this.coinr, 40, 40);
     }
 
     Randomize() {
       this.coinx = Math.random() * (canvW - coinr);
       this.coiny = Math.random() * (canvH - coinr);
+    }
+
+    Collide(ball) {
+      // Calculate distance between ball and coin
+      const distance = Math.sqrt(
+        Math.pow(ball.ballx - coin.coinx, 2) +
+          Math.pow(ball.bally - coin.coiny, 2)
+      );
+
+      if (distance < ball.ballR +this.coinr) {
+        // Collision detected
+        coin.Randomize();
+        coinCollect.play();
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -164,7 +220,7 @@ window.onload = () => {
   const gravity = 25;
 
   // Coin properties
-  const coinr = 50;
+  const coinr = 20;
   const coin = new Coin(coinr, canvW, canvH);
 
   // Easy Rectangle
@@ -182,8 +238,15 @@ window.onload = () => {
   // Score
   let score = 0;
 
+  // Background music
+  const backgroundMusic = new BackgroundMusic("mice-on-venus.mp3");
+
+  // Sound effects
+  const coinCollect = new SoundEffect("collect-coin.mp3");
+  const lostEffect = new SoundEffect("lose.mp3");
+
   // Element references
-  const startBtn = document.getElementById("jump");
+  const startBtn = document.getElementById("Start");
   const resetSpeed = document.getElementById("resetSpeed");
   const plusSpeed = document.getElementById("plusSpeed");
   const minusSpeed = document.getElementById("minusSpeed");
@@ -357,10 +420,10 @@ window.onload = () => {
         Math.pow(ball.bally - coin.coiny, 2)
     );
 
-    if (distance < ball.ballR + 20) {
+    if (coin.Collide(ball)) {
       // Collision detected
       score++;
-      coin.Randomize();
+     
     }
 
     if (!stopGame) {
@@ -368,7 +431,9 @@ window.onload = () => {
     } else if (stopGame && pause) {
       pauseScreen();
     } else if (stopGame && (lost || collision)) {
-      lossScreen();
+      lostEffect.play();
+
+      setTimeout(lossScreen,500);
       document.addEventListener("keydown", function (event) {
         if (event.code === "Space" && (collision || lost)) {
           resetGame();
@@ -407,6 +472,7 @@ window.onload = () => {
     context.fillText("Press Space to Try Again", 170, 290);
     context.strokeText("Press Space to Try Again", 170, 290);
     context.lineWidth = 1;
+    backgroundMusic.pause();
   }
 
   // Reset the game state
@@ -422,6 +488,7 @@ window.onload = () => {
     mediumRec.resetRec();
     hardRec.resetRec();
     Rectangle.ResetSpeed();
+    backgroundMusic.replay();
   }
 
   // Initial text on canvas
@@ -438,6 +505,7 @@ window.onload = () => {
     startBtn.style.display = "none";
     context.clearRect(0, 0, canvas.width, canvas.height);
     resetGame();
+    backgroundMusic.play();
     draw();
   };
 };

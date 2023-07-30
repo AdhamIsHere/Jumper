@@ -12,7 +12,7 @@
     <div id="canvas_container">
         <canvas id="canvas" width="600" height="400">Not supported</canvas>
         <div class="leftBox">
-            <h2 class="diff" id="difficulty">difficulty</h2>
+            <h2 id="difficulty">difficulty</h2>
             <button class="menu" id="easy">easy</button>
             <button class="menu" id="medium">medium</button>
             <button class="menu" id="hard">hard</button>
@@ -25,13 +25,18 @@
             <button class="menu" id="resetSpeed">reset speed</button>
         </div>
         <div class="rightBox">
-            <p class="diff">Move with WASD or Arrow Keys
-            </br></br>Press esc to pause
-            </br></br>easy: 1 obstacle
-            </br></br>medium: 2 obstacles
-            </br></br>Hard: 3 obstacles and speed = 5</p>
+            <p class="controls">
+                Move with WASD or Arrow Keys</br>
+                Press esc to pause
+            </p>
+            <p id="diffInfo">
+                easy: 1 obstacle</br>
+                medium: 2 obstacles</br>
+                Hard: 3 obstacles and speed = 5
+            </p>
+
         </div>
-        <button id="jump">Start</button>
+        <button id="Start">Start</button>
     </div>
     <br><br />
 

@@ -3,7 +3,7 @@ body {
   background: radial-gradient(circle, rgba(3,45,71,1) 0%, rgba(5,36,56,1) 33%, rgba(2,18,28,1) 100%);
 }
 
-#jump {
+#Start {
   background-color: #2476f1;
   color: rgb(255, 255, 255);
   border-radius: 700px;
@@ -58,12 +58,12 @@ canvas {
 .menu {
   background-color: #2476f1;
   font-family: bangers;
-  font-size: 1.7vmin;
+  font-size: 2vmin;
   -webkit-text-stroke: 0.1vmin rgb(0, 0, 0);
   color: white;
   padding: 1vmin 2vmin;
   border-radius: 50vmin;
-  width: 12vmin;
+  width: 14vmin;
   margin-bottom: 0.8vmin; /* Add spacing between buttons */
 }
 
@@ -71,12 +71,13 @@ canvas {
   background-color: #002b6b;
 }
 
-.diff {
+.controls{
   font-family: bangers;
   font-size: 2.5vmin;
   padding: 1vmin;
   text-align: center;
   letter-spacing: 0.1vmin;
+  line-height: 1.2;
 }
 
 
@@ -84,7 +85,7 @@ canvas {
   position: absolute;
   height: 100%;
   width: 19.5%;
-  right: 0vmin;
+  right: 0;
   background-color: #315169be;
   display: flex;
   flex-direction: column; /* Set the direction to vertical */
@@ -100,6 +101,8 @@ canvas {
 .speedBtn {
   background-color: #2476f1;
   font-size: 2vmin;
+  height: 5vmin;
+  width: 5vmin;
   color: white;
   padding: 1vmin 1.5vmin;
   border-radius: 50vmin;
@@ -134,5 +137,17 @@ canvas {
 
 #difficulty{
   margin-bottom: 0.1vmin;
+  font-family: bangers;
+  font-size: 2.5vmin;
+  padding: 1vmin;
+  text-align: center;
+  letter-spacing: 0.1vmin;
+}
+
+#diffInfo{
+  text-align: center;
+  font-family: bangers;
+  font-size: 2.5vmin;
+  line-height: 1.3;
 }
 
