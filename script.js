@@ -417,8 +417,8 @@ window.onload = () => {
     // Check if a collision has occurred
     if (
       easyRec.detectCollision(ball) ||
-      mediumRec.detectCollision(ball) ||
-      hardRec.detectCollision(ball)
+      (mediumRec.detectCollision(ball) && difficulty === "meduim" || difficulty === "hard" )||
+      (hardRec.detectCollision(ball) && difficulty === "hard")
     ) {
       // Collision detected
       // Perform actions accordingly
