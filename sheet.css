@@ -17,7 +17,7 @@ body {
   font-size: 7vmin;
   -webkit-text-stroke: 0.3vmin rgb(0, 0, 0);
 }
-#jump:hover {
+#Start:hover {
   background-color: #013e99;
 }
 #canvas_container {
@@ -42,6 +42,7 @@ canvas {
   display: flex;
   flex-direction: column; /* Set the direction to vertical */
   align-items: center; /* Align items to the center horizontally */
+  
 }
 
 .banger {
@@ -96,7 +97,6 @@ canvas {
   display: flex;
   flex-direction: row; /* Set the direction to horizontal */
   align-items: center; /* Align items to the center horizontally */
-  
 }
 .speedBtn {
   background-color: #2476f1;
@@ -126,6 +126,7 @@ canvas {
 
 #resetSpeed {
   margin-top: 1vmin;
+  margin-bottom: 1vmin;
 }
 
 #speedInfo{
@@ -142,6 +143,7 @@ canvas {
   padding: 1vmin;
   text-align: center;
   letter-spacing: 0.1vmin;
+  
 }
 
 #diffInfo{
@@ -150,4 +152,30 @@ canvas {
   font-size: 2.5vmin;
   line-height: 1.3;
 }
+ #music,#effect{
+  background-color: #2476f1;
+  font-size: 2vmin;
+  color: white;
+  -webkit-text-stroke: 0.08vmin rgb(0, 0, 0);
+  padding: 1vmin 1.8vmin;
+  border-radius: 5vmin;
+ }
+
+ #music:hover,#effect:hover{
+  background-color: #002b6b;
+ }
+
+ #music{
+  margin-right: 0.8vmin;
+ }
+
+ #effect{
+  margin-left: 0.8vmin;
+ }
+
+ #sound-control{
+  
+ }
+ 
+
 

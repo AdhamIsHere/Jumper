@@ -22,6 +22,7 @@ window.onload = () => {
   class BackgroundMusic {
     constructor(path) {
       this.music = new Audio(path);
+      this.music.loop = true;
     }
     play() {
       this.music.play();
@@ -29,13 +30,13 @@ window.onload = () => {
     pause() {
       this.music.pause();
     }
-    loop() {
-      this.music.loop = true;
-    }
     replay() {
       this.music.pause();
       this.music.currentTime = 0;
       this.music.play();
+    }
+    toggleMute() {
+     this.music.muted=!this.music.muted;
     }
   }
 
@@ -126,8 +127,8 @@ window.onload = () => {
       if (
         ball.ballx + ball.ballR >= this.recx &&
         ball.ballx - ball.ballR <= this.recx + this.recw &&
-        ball.bally - ball.ballR <= canvH &&
-        ball.bally + ball.ballR >= canvH - this.rech
+        ball.bally - ball.ballR <= this.recy &&
+        ball.bally + ball.ballR >= this.recy - this.rech
       ) {
         return true;
       } else {
@@ -179,9 +180,7 @@ window.onload = () => {
 
     drawCoin() {
       context.beginPath();
-      context.arc(this.coinx, this.coiny, this.coinr, 0, 2 * Math.PI);
-      context.fillStyle = "#e3c228";
-      context.fill();
+      
       context.drawImage(this.coin, this.coinx - this.coinr, this.coiny - this.coinr, 40, 40);
     }
 
@@ -253,6 +252,10 @@ window.onload = () => {
   const easyBtn = document.getElementById("easy");
   const mediumBtn = document.getElementById("medium");
   const hardBtn = document.getElementById("hard");
+  const toggleMusic = document.getElementById("music");
+  const toggleEffect = document.getElementById("effect");
+  const musicIcon = toggleMusic.querySelector("i");
+  const effectIcon = toggleEffect.querySelector("i");
 
   // Movement event handler
   document.onkeydown = function (event) {
@@ -328,6 +331,7 @@ window.onload = () => {
   // Easy button event listener
   easyBtn.onclick = () => {
     difficulty = "easy";
+    Rectangle.ResetSpeed();
     easyBtn.style.backgroundColor = "#0a2247";
     mediumBtn.style.backgroundColor = "#2476f1";
     hardBtn.style.backgroundColor = "#2476f1";
@@ -336,6 +340,7 @@ window.onload = () => {
   // Medium button event listener
   mediumBtn.onclick = () => {
     difficulty = "medium";
+    Rectangle.ResetSpeed();
     easyBtn.style.backgroundColor = "#2476f1";
     mediumBtn.style.backgroundColor = "#0a2247";
     hardBtn.style.backgroundColor = "#2476f1";
@@ -350,6 +355,21 @@ window.onload = () => {
     mediumBtn.style.backgroundColor = "#2476f1";
     hardBtn.style.backgroundColor = "#0a2247";
   };
+
+  // Toggle Music event listener
+  toggleMusic.onclick = () =>{
+    backgroundMusic.toggleMute();
+    toggleMusic.classList.toggle("muted");
+    musicIcon.className = backgroundMusic.music.muted ? "fi fi-sr-music-slash":"fi fi-ss-music"
+  }
+
+  // Toggle effects event listener
+  toggleEffect.onclick = () =>{
+    lostEffect.toggleMute();
+    coinCollect.toggleMute();
+    toggleEffect.classList.toggle("muted");
+    effectIcon.className = (lostEffect.mute && coinCollect.mute) ? "fi fi-ss-volume-slash" : "fi fi-ss-volume"
+  }
   // Draw function
   function draw() {
     const timePassed = (Date.now() - t) / 1000;
