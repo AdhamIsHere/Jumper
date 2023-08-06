@@ -417,7 +417,7 @@ window.onload = () => {
     // Check if a collision has occurred
     if (
       easyRec.detectCollision(ball) ||
-      (mediumRec.detectCollision(ball) && difficulty === "meduim" || difficulty === "hard" )||
+      (mediumRec.detectCollision(ball) && (difficulty === "meduim" || difficulty === "hard") )||
       (hardRec.detectCollision(ball) && difficulty === "hard")
     ) {
       // Collision detected
@@ -433,12 +433,6 @@ window.onload = () => {
       lost = true;
       stopGame = true;
     }
-
-    // Calculate distance between ball and coin
-    const distance = Math.sqrt(
-      Math.pow(ball.ballx - coin.coinx, 2) +
-        Math.pow(ball.bally - coin.coiny, 2)
-    );
 
     if (coin.Collide(ball)) {
       // Collision detected
@@ -520,7 +514,7 @@ window.onload = () => {
   context.fillText("Jumper Game", 90, 200);
   context.lineWidth = 1;
 
-  // Button click event
+  // Start Btn click event
   startBtn.onclick = function () {
     startBtn.style.display = "none";
     context.clearRect(0, 0, canvas.width, canvas.height);
